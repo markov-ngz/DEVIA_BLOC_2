@@ -1,0 +1,6 @@
+{
+    "name": "dataset_ok",
+    "col_origin" : "fr",
+    "col_target" : "pl",
+    "quotechar" : "}"
+}
