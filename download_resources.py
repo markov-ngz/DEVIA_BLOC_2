@@ -31,12 +31,10 @@ def download_files_from_folder(s3_client:boto3.Session,bucket_name:str,folder_na
                 print(f"[{get_datetime()}] Folder {folder_name} not found in bucket {bucket_name}")
 
         for obj in response.get('Contents', []):
-                print(obj, type(obj))
                 key = obj['Key']
 
                 if not key.endswith('/'):
                         local_file_path = os.path.join(download_path, os.path.basename(key))
-                        print(local_file_path)
                         s3_client.download_file(bucket_name, key, local_file_path)
 
 def download_resources(access_key:str, secret_key:str, bucket_name:str, bucket_resources_paths:list[str], download_folder_path:str="./", os_windows=False)->None:
@@ -50,14 +48,12 @@ def download_resources(access_key:str, secret_key:str, bucket_name:str, bucket_r
         s3_client = create_s3_session(access_key=access_key, secret_key=secret_key)
 
         for resource_path in bucket_resources_paths :
-                print(resource_path)
                 if not resource_path.endswith('/'):
                         resource_path += '/'
                 download_path = os.path.join(download_folder_path,resource_path)
                 
                 if os_windows : 
                         download_path = download_path.replace("/","\\")
-                print(download_path)
 
                 if not os.path.exists(download_path):
                         os.makedirs(download_path)
@@ -74,12 +70,13 @@ DOWNLOAD_PATH = os.getenv("DOWNLOAD_PATH")
 S3_ACCESS_KEY = os.getenv("S3_ACCESS_KEY")
 S3_SECRET_KEY = os.getenv("S3_SECRET_KEY")
 
-# download_resources(S3_ACCESS_KEY,
-#                    S3_SECRET_KEY,
-#                    bucket_name,
-#                    [
-#                            S3_RESOURCES['model'], 
-#                            S3_RESOURCES['tokenizer']
-#                    ],
-#                    download_folder_path=directory_to_download_to, 
-#                    os_windows=True)
+download_resources(S3_ACCESS_KEY,
+                   S3_SECRET_KEY,
+                   S3_BUCKET,
+                   [
+                           S3_RESOURCES['model'], 
+                           S3_RESOURCES['tokenizer'],
+                           S3_RESOURCES['datasets']
+                   ],
+                   download_folder_path=DOWNLOAD_PATH, 
+                   os_windows=True)
