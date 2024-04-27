@@ -83,7 +83,8 @@ def to_tf_dataset(hf_ds_tokenized:DatasetDict,tokenizer, model_checkpoint:str)->
 
 def preprocess(csv_paths:dict, col_origin:str,col_target:str, model_path:str,tokenizer_path:str, quotechar:str="}")->tuple:
     """
-    
+    Preprocess  .csv (pd.DataFrame->hf.DatasetDict->tf..._PrefetchDataset) \n
+    Return a tuple (model ,tokenizer , tensorflow_dataset)
     """
     wrap = {}
     for key in csv_paths.keys() : 

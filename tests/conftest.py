@@ -22,6 +22,7 @@ TEST_CSV_PATH = f"tests/test_datasets/{dataset_ok['name']}.csv"
 TEST_QUOTECHAR = dataset_ok['quotechar']
 TEST_COL_SOURCE = dataset_ok['col_origin']
 TEST_COL_TARGET = dataset_ok['col_target']
+TEST_MODEL_VERSION = dataset_ok
 TEST_EPOCHS = 1
 
 
