@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - 's3_model.json'
-      - '*.py'
 jobs:
   test: # job name
     name: Run pytest
