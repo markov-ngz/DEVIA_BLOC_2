@@ -1,11 +1,11 @@
-name : Test datasets
+name : Test model
 
 on: 
   pull_request:
     branches:
       - main
     paths:
-      - 's3_datasets.json'
+      - 's3_model.json'
       - '*.py'
 jobs:
   test: # job name
