@@ -1,6 +1,4 @@
 {
-    "model":"model/",
-    "tokenizer":"tokenizer/",
     "datasets": {
         "train":"datasets/train.csv",
         "valid":"datasets/valid.csv",
