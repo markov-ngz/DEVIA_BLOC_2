@@ -5,7 +5,8 @@ on:
     branches:
       - main
     paths:
-      - 'datasets/**' 
+      - 's3_datasets.json'
+      - '*.py'
 jobs:
   test: # job name
     name: Run pytest
