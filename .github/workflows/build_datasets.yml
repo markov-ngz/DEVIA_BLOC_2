@@ -34,6 +34,10 @@ jobs:
     #     python -m pip install --upgrade pip
     #     pip install -r requirements.txt
 
+    # - name: Download model and tokenizer
+    #   run: |
+    #     python load_resources.py
+
     - name: Test preprocessing
 
       run: |

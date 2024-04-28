@@ -112,25 +112,23 @@ def upload_ressources(access_key:str,
                                         except S3UploadFailedError as e:
                                                 raise e   
 
+if __name__ == '__main__' :
+        S3_BUCKET = os.getenv('S3_BUCKET')
+        with open("s3_model.json")as f:
+                S3_MODEL = json.load(f)
+        with open("s3_datasets.json")as f:
+                S3_DS = json.load(f)
+        DOWNLOAD_PATH = os.getenv("DOWNLOAD_PATH")
+        S3_ACCESS_KEY = os.getenv("S3_ACCESS_KEY")
+        S3_SECRET_KEY = os.getenv("S3_SECRET_KEY")
 
-
-
-S3_BUCKET = os.getenv('S3_BUCKET')
-with open("s3_model.json")as f:
-        S3_MODEL = json.load(f)
-with open("s3_datasets.json")as f:
-        S3_DS = json.load(f)
-DOWNLOAD_PATH = os.getenv("DOWNLOAD_PATH")
-S3_ACCESS_KEY = os.getenv("S3_ACCESS_KEY")
-S3_SECRET_KEY = os.getenv("S3_SECRET_KEY")
-
-# download_resources(S3_ACCESS_KEY,
-#                    S3_SECRET_KEY,
-#                    S3_BUCKET,
-#                    [
-#                            S3_MODEL['model'], 
-#                            S3_MODEL['tokenizer'],
-#                            S3_DS['datasets']
-#                    ],
-#                    download_folder_path=DOWNLOAD_PATH, 
-#                    os_windows=True)
+        download_resources(S3_ACCESS_KEY,
+                           S3_SECRET_KEY,
+                           S3_BUCKET,
+                           [
+                                   S3_MODEL['model'], 
+                                   S3_MODEL['tokenizer'],
+                                   S3_DS['datasets']
+                           ],
+                           download_folder_path=DOWNLOAD_PATH, 
+                           os_windows=True)

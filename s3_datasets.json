@@ -4,5 +4,16 @@
         "train":"datasets/train.csv",
         "valid":"datasets/valid.csv",
         "test":"datasets/test.csv"
+    },
+    "cols": {
+        "origin": "fr",
+        "target": "pl"
+    },
+    "quotechar" : "}" ,
+    "threshold": {
+        "metric_name": "bleu",
+        "min": 35,
+        "max": 65
+
     }
 }
