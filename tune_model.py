@@ -146,7 +146,7 @@ def tune_model(csv_dict:dict,
                               s3_credentials['secret_key'], 
                               s3_credentials['bucket_name'],
                               resources_paths )
-        elif bleu_score_test['score'] >= threshold['min'] and  bleu_score_test['score'] <= threshold['max'] : # model do not match teams requirements
+        elif bleu_score_test['score'] <= threshold['min'] or  bleu_score_test['score'] >= threshold['max'] : # model do not match teams requirements
             raise Exception(f" Model test score  on bleu metric : {bleu_score_test['score']} is not matching the requirements. Bleu score must be between [{threshold['min']}:{threshold['max']}]") 
         else : # model is just not the best 
             raise Exception(f"""[{datetime.now().strftime('%H:%M:%S')}] : \n  

@@ -1,7 +1,25 @@
 from tune_model import tune_model
 from dotenv import load_dotenv 
+from argparse import ArgumentParser
 import json , os
 load_dotenv()
+
+# evaluate or train ? 
+parser = ArgumentParser( description="Train or Evaluate a model on blue score ")
+parser.add_argument("--only_evaluate",default=False,required=True,type=bool,help="Choose if you wish to train the model or only evaluate it")
+parser.add_argument("--epochs",default=0,required=False,type=int,help="Choose the number of epochs you wish to train the model on")
+
+only_eval_model = parser.parse_args().only_evaluate
+epochs = parser.parse_args().epochs
+
+if not isinstance(only_eval_model, bool) : 
+      raise TypeError("Command line argument : --only_eval_model must be of type bool")
+if not isinstance(epochs, int) : 
+      raise TypeError("Command line argument : --epochs must be of type int")
+
+if not only_eval_model and epochs <= 0 : 
+      raise ValueError("If you wish to train the model please fill the --epochs argument with the number of epochs you wish to train the model on ")
+
 
 BLEU_PATH = "bleu_score.json"
 S3_BUCKET = os.getenv('S3_BUCKET')
@@ -34,5 +52,6 @@ tune_model(
         S3_DS['version'],
         {"min":S3_DS['threshold']['min'],"max":S3_DS['threshold']['max']},
         {"access_key":S3_ACCESS_KEY,"secret_key":S3_SECRET_KEY},
-        only_eval_model=True,
+        only_eval_model=only_eval_model,
+        EPOCHS=epochs
 )

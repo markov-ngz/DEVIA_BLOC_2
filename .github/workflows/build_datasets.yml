@@ -27,39 +27,37 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version}}
+        python-version: ${{matrix.python-version}}
     
-    # - name: Install dependencies
-    #   run : |
-    #     python -m pip install --upgrade pip
-    #     pip install -r requirements.txt
+    - name: Install dependencies
+      run : |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
-    # - name: Download model and tokenizer
-    #   run: |
-    #     python load_resources.py
+    - name: Download model and tokenizer
+      run: |
+        python load_resources.py
 
-    - name: Test preprocessing
+    - name: test_preprocessing
 
       run: |
-        python --version
-      # pytest tests/preprocess.txt
-    
-    - name: Evaluate model on new dataset
-      run: |
-        python --version
-      # python evaluate_model_on_new_dataset.py => compare to threshold fixed by team
-      # if score < threshold wanted ==> 
-      continue-on-error: true
-
-    - name: Train model on new dataset
-      if: ${{ failure() }} # Conditions to check if the previous step fails 
-      run: |
-        python --version
-      # python train_model_new_dataset.py => if bleu score of trained model > existing ==> push to prod 
-
+        pytest tests/preprocess.txt
+        
     - name: Upload pytest test result
       uses: actions/upload-artifact@v4
       with:
         name: pytest-results-${{ matrix.python-version }}
         path: test-results-${{ matrix.python-version }}.xml
       if: ${{ always() }}
+
+    - name: Evaluate model  on new dataset 
+      run: | 
+        python main.py --only_evaluate=True 
+      continue-on-error: true
+
+    - name: Train model  on new dataset 
+        needs: test_preprocessing
+        if: ${{ failure() }} 
+      run: | #  as the model is not better than the previous one and also do not match teams requirement => train it 
+        python main.py --only_evaluate=False --epochs=1 
+      continue-on-error: true

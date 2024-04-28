@@ -29,22 +29,25 @@ jobs:
       with:
         python-version: ${{ matrix.python-version}}
     
-    # - name: Install dependencies
-    #   run : |
-    #     python -m pip install --upgrade pip
-    #     pip install -r requirements.txt
-
+    - name: Install dependencies
+      run : |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Download model and tokenizer
+      run: |
+        python load_resources.py
     - name: Run pytest
       run: |
-        python --version
-    
-    - name: evaluate model 
-      run: |
-        python --version
-      # evaluate_model.py => if bleu score > existing model : push to prod  
+        pytest test_evaluate_model.py test_tune_model.py
+
     - name: Upload pytest test result
       uses: actions/upload-artifact@v4
       with:
         name: pytest-results-${{ matrix.python-version }}
         path: test-results-${{ matrix.python-version }}.xml
       if: ${{ always() }}
+
+    - name: Evaluate model  on new dataset 
+      run: | 
+        python main.py --only_evaluate=True 
+
