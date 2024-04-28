@@ -56,7 +56,6 @@ jobs:
       continue-on-error: true
 
     - name: Train model  on new dataset 
-        needs: test_preprocessing
         if: ${{ failure() }} 
       run: | #  as the model is not better than the previous one and also do not match teams requirement => train it 
         python main.py --only_evaluate=False --epochs=1 
