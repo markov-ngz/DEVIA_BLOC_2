@@ -34,6 +34,11 @@ def csv_dict_path():
 def epochs():
   return TEST_EPOCHS
 
+
+@pytest.fixture(scope="function")
+def sample_text():
+  return "Gościu, czy możemy wyjść bez pożegnania?"
+
 @pytest.fixture(scope="session")
 def col_origin_target():
     return TEST_COL_SOURCE, TEST_COL_TARGET
@@ -85,7 +90,7 @@ def hf_ds(cleaned_df):
 
 @pytest.fixture(scope="session")
 def tokened_ds(hf_ds, model_and_tokenizer_checkpoint, col_origin_target):
-    ds = to_datasetdict({"test":hf_ds})
+    ds = to_datasetdict({"train":hf_ds,"valid":hf_ds,"test":hf_ds})
     col_o, col_t = col_origin_target
     _ , tokenizer_chkpt = model_and_tokenizer_checkpoint
     return tokenize_hf_ds(ds,tokenizer_chkpt, col_o,col_t)
@@ -94,7 +99,7 @@ def tokened_ds(hf_ds, model_and_tokenizer_checkpoint, col_origin_target):
 def processed_ds(tokened_ds, model_and_tokenizer_checkpoint):
     tokenizer, ds_tokenized  = tokened_ds
     model_path , _ = model_and_tokenizer_checkpoint
-    return to_tf_dataset(tokened_ds, tokenizer=tokenizer,model_checkpoint=model_path)
+    return to_tf_dataset(ds_tokenized, tokenizer=tokenizer,model_checkpoint=model_path)
 
 @pytest.fixture(scope="session")  # Provide sample data for each test
 def test_data():

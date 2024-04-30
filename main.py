@@ -13,7 +13,7 @@ only_eval_model = parser.parse_args().only_evaluate
 epochs = parser.parse_args().epochs
 
 if not isinstance(only_eval_model, bool) : 
-      raise TypeError("Command line argument : --only_eval_model must be of type bool")
+      raise TypeError("Command line argument : --only_evaluate must be of type bool")
 if not isinstance(epochs, int) : 
       raise TypeError("Command line argument : --epochs must be of type int")
 
@@ -51,7 +51,7 @@ tune_model(
         BLEU_PATH,
         S3_DS['version'],
         {"min":S3_DS['threshold']['min'],"max":S3_DS['threshold']['max']},
-        {"access_key":S3_ACCESS_KEY,"secret_key":S3_SECRET_KEY},
+        {"access_key":S3_ACCESS_KEY,"secret_key":S3_SECRET_KEY,"bucket_name":S3_BUCKET},
         only_eval_model=only_eval_model,
         EPOCHS=epochs
 )
