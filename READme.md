@@ -30,7 +30,8 @@ Ainsi lors de la PR de la branche model vers la main :
 2 volumes 'green' et 'blue' au sein du cluster. \n
 Sur le volume qui ne sert pas en production : \n
 Lancer le container pour copier le contenu du modèle dans celui du volume. \n
-docker run --volume xxxxxxxxxxxxxxxxxx
+``` docker run --volume xxxxxxxxxxxxxxxxxx```
+
 
 Puis sur le conteneur de l'api exposant le modèle effectué un déploiement bleu/vert en modifiant le montage du volume tokenizer et model à celui de 'blue' ou 'green'.
 
