@@ -128,7 +128,8 @@ if __name__ == '__main__' :
                            [
                                    S3_MODEL['model'], 
                                    S3_MODEL['tokenizer'],
-                                   S3_DS['datasets']
+                                   S3_MODEL['scoring']["folder"],
+                                   S3_DS['dataset_folder']
                            ],
                            download_folder_path=DOWNLOAD_PATH, 
                            os_windows=True)

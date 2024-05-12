@@ -1,4 +1,5 @@
 {
     "model":"model/",
-    "tokenizer":"tokenizer/"
+    "tokenizer":"tokenizer/",
+    "scoring" : {"folder":"scoring/","file_name":"bleu_score.json"}
 }

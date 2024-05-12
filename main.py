@@ -21,7 +21,7 @@ if not only_eval_model and epochs <= 0 :
       raise ValueError("If you wish to train the model please fill the --epochs argument with the number of epochs you wish to train the model on ")
 
 
-BLEU_PATH = "bleu_score.json"
+
 S3_BUCKET = os.getenv('S3_BUCKET')
 S3_ACCESS_KEY = os.getenv("S3_ACCESS_KEY")
 S3_SECRET_KEY = os.getenv("S3_SECRET_KEY")
@@ -31,6 +31,7 @@ with open("s3_model.json")as f:
 with open("s3_datasets.json")as f:
         S3_DS = json.load(f)
 
+bleu_path = os.path.join(S3_MODEL['scoring']['folder'],S3_MODEL['scoring']['file_name'])
 model_path = os.path.join(DOWNLOAD_PATH, S3_MODEL["model"])
 tokenizer_path =  os.path.join(DOWNLOAD_PATH, S3_MODEL["tokenizer"])
 
@@ -48,7 +49,7 @@ tune_model(
         S3_DS['cols']['target'],
         model_path,
         tokenizer_path,
-        BLEU_PATH,
+        bleu_path,
         S3_DS['version'],
         {"min":S3_DS['threshold']['min'],"max":S3_DS['threshold']['max']},
         {"access_key":S3_ACCESS_KEY,"secret_key":S3_SECRET_KEY,"bucket_name":S3_BUCKET},

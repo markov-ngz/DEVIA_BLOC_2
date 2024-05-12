@@ -75,7 +75,7 @@ def tune_model(csv_dict:dict,
     if not (isinstance(threshold['min'],(float,int))) and  not (isinstance(threshold['min'],(float,int))):
         raise TypeError("Minimum and maximum thresholds must be of type int or float ")
         
-    resources_paths = [{"local_path":MODEL_CHECKPOINT,"remote_path":"prod/"},{"local_path":TOKENIZER_CHECKPOINT,"remote_path":"prod/"}]
+    resources_paths = [{"local_path":MODEL_CHECKPOINT,"remote_path":"prod/"},{"local_path":TOKENIZER_CHECKPOINT,"remote_path":"prod/"},{"local_path":BLEU_PATH,"remote_path":BLEU_PATH}]
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] : Begginning Preprocess ")
 

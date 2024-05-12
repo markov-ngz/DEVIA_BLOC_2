@@ -1,5 +1,6 @@
 {
     "version":42,
+    "datasets_folder":"datasets/",
     "datasets": {
         "train":"datasets/train.csv",
         "valid":"datasets/valid.csv",
