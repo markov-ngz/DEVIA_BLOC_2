@@ -6,14 +6,16 @@ import tensorflow as tf
 from preprocess import preprocess
 from evaluate_model import get_bleu_score
 from load_resources import upload_ressources
-import json  
+import json   , logging
 from datetime import datetime
 load_dotenv()
 
+logger  = logging.getLogger(__name__)
+logging.basicConfig(filename="app.log",level=logging.INFO)
 
-logger = tf.get_logger()
+tf_log = tf.get_logger()
 fh = logging.FileHandler("tf.log")
-logger.addHandler(fh)
+tf_log.addHandler(fh)
 
 
 def train_model(num_epochs:int, model, ds_train, ds_valid):
@@ -63,18 +65,28 @@ def tune_model(csv_dict:dict,
     WARNING :  please check your credentials before launching training ( can't check before training as session migt expire)
     """
     if only_eval_model == False and EPOCHS <= 0 :
-        raise ValueError("If only_eval_model is set to False, please set the numbers of epochs wanted to train the model on")
+        msg = "If only_eval_model is set to False, please set the numbers of epochs wanted to train the model on"
+        logger.error(msg)
+        raise ValueError(msg)
     if [key for key in  s3_credentials.keys()] != ["access_key","secret_key","bucket_name"]:
-        raise ValueError(f"Error for  S3_credentials : Dictionary key for S3_credentials must have keys : access_key and secret_key and bucket_name")
+        msg = f"Error for  S3_credentials : Dictionary key for S3_credentials must have keys : access_key and secret_key and bucket_name"
+        logger.error(msg)
+        raise ValueError(msg)
     # check type
     if not isinstance(s3_credentials['access_key'],str) or not isinstance(s3_credentials['secret_key'],str):
-            raise TypeError(f"access_key, secret_key and bucket_name key's values must be of type str ")
+        msg = f"access_key, secret_key and bucket_name key's values must be of type str "
+        logger.error(msg)
+        raise TypeError(msg)
     
     if not isinstance( quotechar,str):
-        raise TypeError('quotechar argument value must be of type str ')
+        msg = 'quotechar argument value must be of type str'
+        logger.error(msg)
+        raise TypeError(msg)
 
     if not (isinstance(threshold['min'],(float,int))) and  not (isinstance(threshold['min'],(float,int))):
-        raise TypeError("Minimum and maximum thresholds must be of type int or float ")
+        msg = "Minimum and maximum thresholds must be of type int or float "
+        logger.error(msg)
+        raise TypeError(msg)
         
     resources_paths = [{"local_path":MODEL_CHECKPOINT,"remote_path":"prod/"},{"local_path":TOKENIZER_CHECKPOINT,"remote_path":"prod/"},{"local_path":BLEU_PATH,"remote_path":BLEU_PATH}]
 
@@ -129,9 +141,9 @@ def tune_model(csv_dict:dict,
         if ( # is the model better than the current one ? 
             bleu_score_test['score'] > max_blue_score['test']['score'] and 
             bleu_score_test['score'] < 50 + (50 - max_blue_score['test']['score']) and 
-            ds_version == max_blue_score['test']['version']
+            ds_version == max_blue_score['version']
             ) or ( # new version of the dataset , does the model match the teams requirements ? 
-            ds_version > max_blue_score['test']['version'] and 
+            ds_version > max_blue_score['version'] and 
             bleu_score_test['score'] >= threshold['min'] and  bleu_score_test['score'] <= threshold['max']
             ): 
             
@@ -148,14 +160,18 @@ def tune_model(csv_dict:dict,
                               s3_credentials['bucket_name'],
                               resources_paths )
         elif bleu_score_test['score'] <= threshold['min'] or  bleu_score_test['score'] >= threshold['max'] : # model do not match teams requirements
-            raise Exception(f" Model test score  on bleu metric : {bleu_score_test['score']} is not matching the requirements. Bleu score must be between [{threshold['min']}:{threshold['max']}]") 
+            msg = f" Model test score  on bleu metric : {bleu_score_test['score']} is not matching the requirements. Bleu score must be between [{threshold['min']}:{threshold['max']}]"
+            logger.error(msg)
+            raise Exception(msg) 
         else : # model is just not the best 
-            raise Exception(f"""[{datetime.now().strftime('%H:%M:%S')}] : \n  
-                Versions : dataset version : {ds_version} | bleu_score_version : {max_blue_score['test']['version']} \n
-                Bleu Scores : computed : {bleu_score_test['score']} | current : { max_blue_score['test']['version']} \n
+            msg = f"""[{datetime.now().strftime('%H:%M:%S')}] : \n  
+                Versions : dataset version : {ds_version} | bleu_score_version : {max_blue_score['version']} \n
+                Bleu Scores : computed : {bleu_score_test['score']} | current : { max_blue_score['test']['score']} \n
                 Message : Bleu Score too low or Invalid Versions 
                 Actions : Model not loaded into production
-            """)
+            """
+            logger.error(msg)
+            raise Exception(msg)
     else:
 
         with open(BLEU_PATH, 'w') as f:

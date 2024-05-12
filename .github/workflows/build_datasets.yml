@@ -41,7 +41,7 @@ jobs:
     - name: test_preprocessing
 
       run: |
-        pytest tests/preprocess.txt
+        pytest tests/test_preprocess.py
         
     - name: Upload pytest test result
       uses: actions/upload-artifact@v4

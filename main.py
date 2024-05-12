@@ -1,8 +1,11 @@
 from tune_model import tune_model
 from dotenv import load_dotenv 
 from argparse import ArgumentParser
-import json , os , logging 
+import json , os  
+import logging
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(filename="app.log",level=logging.INFO)
 
 load_dotenv()
 
@@ -15,12 +18,17 @@ only_eval_model = parser.parse_args().only_evaluate
 epochs = parser.parse_args().epochs
 
 if not isinstance(only_eval_model, bool) : 
-      raise TypeError("Command line argument : --only_evaluate must be of type bool")
+      msg = "Command line argument : --only_evaluate must be of type bool"
+      logger.error(msg)
+      raise TypeError(msg)
 if not isinstance(epochs, int) : 
-      raise TypeError("Command line argument : --epochs must be of type int")
+      msg = "Command line argument : --epochs must be of type int"
+      raise TypeError(msg)
 
 if not only_eval_model and epochs <= 0 : 
-      raise ValueError("If you wish to train the model please fill the --epochs argument with the number of epochs you wish to train the model on ")
+      msg = "If you wish to train the model please fill the --epochs argument with the number of epochs you wish to train the model on "
+      logger.error(msg)
+      raise ValueError(msg)
 
 
 
@@ -40,9 +48,6 @@ tokenizer_path =  os.path.join(DOWNLOAD_PATH, S3_MODEL["tokenizer"])
 for key in S3_DS['datasets'].keys() : 
     S3_DS['datasets'][key] =  os.path.join(DOWNLOAD_PATH, S3_DS['datasets'][key])
 
-
-if not os.path.exists("bleu_score.json"):
-    raise SystemError("File : bleu_score.json not found at the root directory")
 
 tune_model(
         S3_DS['datasets'],

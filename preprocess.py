@@ -6,7 +6,7 @@ from transformers import DataCollatorForSeq2Seq , TFAutoModelForSeq2SeqLM
 
 
 logger = logging.getLogger(__name__)
-logger.basicConfig(level=logging.INFO)
+logging.basicConfig(filename="app.log",level=logging.INFO)
 
 def dict_formatter(x,col_origin, col_target):
     return {"id":x['index'],"translation":{col_origin : x[col_origin], col_target : x[col_target]}}
@@ -16,7 +16,9 @@ def format_pandas_df(df : pd.DataFrame,col_origin:str,col_target:str)->pd.DataFr
     df = df.rename(columns={0:col_origin,1:col_target})[[col_origin,col_target]]
 
     if col_origin not in df.columns and col_target not in df.columns : 
-        raise ValueError("DataFrame columns could not be renamed , ensure that your csv is headless ")
+        msg = "DataFrame columns could not be renamed , ensure that your csv is headless "
+        logger.error(msg)
+        raise ValueError(msg)
     
     df.dropna(inplace=True)
     df.reset_index(inplace=True)
@@ -47,7 +49,9 @@ def to_datasetdict(dict_datasets:dict)->DatasetDict:
     ds = DatasetDict()
     for key in dict_datasets.keys():
         if key not in ('train','valid','test'):
-            raise ValueError("Variable key must be equal to either train , valid or test ")
+            msg = "Variable key must be equal to either train , valid or test "
+            logger.error(msg)
+            raise ValueError(msg)
         ds[key] = dict_datasets[key]
     return ds
 
@@ -94,7 +98,10 @@ def preprocess(csv_paths:dict, col_origin:str,col_target:str, model_path:str,tok
     wrap = {}
     for key in csv_paths.keys() : 
         if key not in ('train','valid','test'):
-            raise ValueError("csv_paths argument's keys must be equal to either train , valid or test ")
+            msg = "csv_paths argument's keys must be equal to either train , valid or test "
+            logger.error(msg)
+            raise ValueError(msg)
+        
         pd_df = pd.read_csv(csv_paths[key],quotechar=quotechar, header=None)
         f_df = format_pandas_df(pd_df,col_origin, col_target)
         hf_ds = pd_to_hf_dataset(f_df)

@@ -5,8 +5,8 @@ import os , json, logging
 load_dotenv()
 from datetime import datetime
 
-logger = logging.getLogger(__name__)
-logger.basicConfig(level=logging.INFO)
+logger = logging.getLogger()
+logging.basicConfig(filename="app.log",level=logging.INFO)
 
 def get_datetime():
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -44,7 +44,9 @@ def download_resources(access_key:str, secret_key:str, bucket_name:str, bucket_r
         """
         for key in (access_key, secret_key):
                 if not isinstance(key,str):
-                        raise ValueError("Variable Environments used to connect to cloud storage not found ")
+                        msg = "Variable Environments used to connect to cloud storage not found "
+                        logger.error(msg)
+                        raise ValueError(msg)
                 
         s3_client = create_s3_session(access_key=access_key, secret_key=secret_key)
 
@@ -59,7 +61,9 @@ def download_resources(access_key:str, secret_key:str, bucket_name:str, bucket_r
                 if not os.path.exists(download_path):
                         os.makedirs(download_path)
                 else :
-                        raise SystemError(f"[{get_datetime()}] Folder already exists  : {download_path}")
+                        msg = f"[{get_datetime()}] Folder already exists  : {download_path}"
+                        logger.error(msg)
+                        raise SystemError(msg)
 
                 download_files_from_folder(s3_client,bucket_name,resource_path,download_path)
 
@@ -74,13 +78,17 @@ def upload_ressources(access_key:str,
         """
         for key in (access_key, secret_key):
                 if not isinstance(key,str):
-                        raise ValueError("Variable Environments used to connect to cloud storage not found ")
+                        msg = "Variable Environments used to connect to cloud storage not found "
+                        logger.error(msg)
+                        raise ValueError(msg)
         s3_client = create_s3_session(access_key=access_key, secret_key=secret_key)
 
         for resource_paths in resources_paths :
 
                 if [key for key in  resource_paths.keys()] != ["local_path","remote_path"]:
-                        raise ValueError(f"Error for {resource_paths} value : Dictionary key for resources paths must have keys : local_path and remote_path")
+                        msg = f"Error for {resource_paths} value : Dictionary key for resources paths must have keys : local_path and remote_path"
+                        logger.error(msg)
+                        raise ValueError(msg)
                 
                 # get value from dict 
                 local_path = resource_paths['local_path'] 
@@ -88,7 +96,9 @@ def upload_ressources(access_key:str,
                 
                 # check type
                 if not isinstance(local_path,str) or not isinstance(remote_path,str):
-                        raise TypeError(f"local_path and key remote_path key value must be of type str ")
+                        msg =  f"local_path and key remote_path key value must be of type str "
+                        logger.error(msg)
+                        raise TypeError(msg)
                 
                 if not local_path.endswith("/"): # folder or file ? 
 
@@ -100,6 +110,7 @@ def upload_ressources(access_key:str,
                                 s3_client.upload_file(local_path, bucket_name, remote_path)
                                 logger.info(f"[{get_datetime()}] File {local_path} successfully uploaded to S3 ")
                         except S3UploadFailedError as e:
+                                logger.error(str(e))
                                 raise e 
                 else : # folders
                         for root, dirs, files in os.walk(local_path):
@@ -110,6 +121,7 @@ def upload_ressources(access_key:str,
                                                 s3_client.upload_file(local_path_file, bucket_name, remote_file_path)
                                                 logger.info(f"[{get_datetime()}] File {local_path_file} successfully uploaded to S3 ")
                                         except S3UploadFailedError as e:
+                                                logger.error(str(e))
                                                 raise e   
 
 if __name__ == '__main__' :
