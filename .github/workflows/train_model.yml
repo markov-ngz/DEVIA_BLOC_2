@@ -34,4 +34,4 @@ jobs:
 
     - name: Train model 
       run: |
-        python main.py --only_evaluate=False --epochs=1
+        python main.py --epochs=1

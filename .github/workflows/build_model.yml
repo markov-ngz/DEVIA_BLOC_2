@@ -49,5 +49,5 @@ jobs:
 
     - name: Evaluate model  on new dataset 
       run: | 
-        python main.py --only_evaluate=True 
+        python main.py --only_evaluate
 

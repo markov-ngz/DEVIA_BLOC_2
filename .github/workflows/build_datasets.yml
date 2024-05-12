@@ -52,11 +52,11 @@ jobs:
 
     - name: Evaluate model  on new dataset 
       run: | 
-        python main.py --only_evaluate=True 
+        python main.py --only_evaluate
       continue-on-error: true
 
     - name: Train model  on new dataset 
       if: ${{ failure() }} 
       run: | #  as the model is not better than the previous one and also do not match teams requirement => train it 
-        python main.py --only_evaluate=False --epochs=1 
+        python main.py  --epochs=1 
       continue-on-error: true

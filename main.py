@@ -1,6 +1,7 @@
 from tune_model import tune_model
 from dotenv import load_dotenv 
 from argparse import ArgumentParser
+import argparse
 import json , os  
 import logging
 
@@ -11,11 +12,14 @@ load_dotenv()
 
 # evaluate or train ? 
 parser = ArgumentParser( description="Train or Evaluate a model on blue score ")
-parser.add_argument("--only_evaluate",default=False,required=True,type=bool,help="Choose if you wish to train the model or only evaluate it")
+parser.add_argument("--only_evaluate",action=argparse.BooleanOptionalAction,help="Choose if you wish to train the model or only evaluate it")
 parser.add_argument("--epochs",default=0,required=False,type=int,help="Choose the number of epochs you wish to train the model on")
 
 only_eval_model = parser.parse_args().only_evaluate
+if only_eval_model != True :
+    only_eval_model = False
 epochs = parser.parse_args().epochs
+
 
 if not isinstance(only_eval_model, bool) : 
       msg = "Command line argument : --only_evaluate must be of type bool"
