@@ -1,6 +1,10 @@
 import evaluate
 import numpy as np 
 from datetime import datetime
+import logging
+
+logger = logging.getLogger(__name__)
+logger.basicConfig(level=logging.INFO)
 
 def compute_bleu(test_data, model ,tokenizer):
     """
@@ -11,7 +15,7 @@ def compute_bleu(test_data, model ,tokenizer):
     count=0
     for batch,labels in test_data:
 
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] :  Beginning Process of batch n°{count}")  
+        logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] :  Beginning Process of batch n°{count}")  
 
         prediction=model.generate(
             input_ids=batch["input_ids"],
@@ -30,7 +34,7 @@ def compute_bleu(test_data, model ,tokenizer):
         all_label.extend(label)
         predictions.extend(prediction)
         
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] :  Batch n° {count} processed")  
+        logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] :  Batch n° {count} processed")  
         count+=1
     return all_label,predictions
 

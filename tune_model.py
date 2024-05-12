@@ -10,9 +10,10 @@ import json
 from datetime import datetime
 load_dotenv()
 
-tf_logs = tf.get_logger()
+
+logger = tf.get_logger()
 fh = logging.FileHandler("tf.log")
-tf_logs.addHandler(fh)
+logger.addHandler(fh)
 
 
 def train_model(num_epochs:int, model, ds_train, ds_valid):
@@ -77,7 +78,7 @@ def tune_model(csv_dict:dict,
         
     resources_paths = [{"local_path":MODEL_CHECKPOINT,"remote_path":"prod/"},{"local_path":TOKENIZER_CHECKPOINT,"remote_path":"prod/"},{"local_path":BLEU_PATH,"remote_path":BLEU_PATH}]
 
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] : Begginning Preprocess ")
+    logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] : Begginning Preprocess ")
 
     model, tokenizer, tf_ds = preprocess(
                                         csv_dict,
@@ -87,36 +88,36 @@ def tune_model(csv_dict:dict,
                                         TOKENIZER_CHECKPOINT,
                                         quotechar=quotechar)
 
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] :  Preprocess Finished ")  
+    logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] :  Preprocess Finished ")  
 
     bleu_scores = {"version": ds_version}
 
     if not only_eval_model :
 
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] :  Begginning training ")  
+        logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] :  Begginning training ")  
 
         model = train_model(EPOCHS, 
                             model, 
                             tf_ds['train'],
                             tf_ds['valid'])
 
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] :   Training Finished ")  
+        logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] :   Training Finished ")  
 
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] :   Computing Bleu Score for each dataset ")  
+        logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] :   Computing Bleu Score for each dataset ")  
 
         # Computing Scores for different dataset 
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] :   Computing Bleu Score for Train dataset ") 
+        logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] :   Computing Bleu Score for Train dataset ") 
         bleu_score_train = get_bleu_score(tf_ds['train'],model,tokenizer)
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] :   Finished Computing Bleu Score for Train dataset ") 
+        logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] :   Finished Computing Bleu Score for Train dataset ") 
         bleu_scores['train'] = bleu_score_train
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] :   Computing Bleu Score for Validation dataset ") 
+        logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] :   Computing Bleu Score for Validation dataset ") 
         bleu_score_valid = get_bleu_score(tf_ds['valid'],model,tokenizer)
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] :   Finished Computing Bleu Score for Validation dataset ") 
+        logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] :   Finished Computing Bleu Score for Validation dataset ") 
         bleu_scores['valid'] = bleu_score_valid
 
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] :   Computing Bleu Score for Test dataset ") 
+    logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] :   Computing Bleu Score for Test dataset ") 
     bleu_score_test = get_bleu_score(tf_ds['test'],model,tokenizer)
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] :   Finished Computing Bleu Score for Test dataset ") 
+    logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] :   Finished Computing Bleu Score for Test dataset ") 
     bleu_scores['test'] = bleu_score_test
     bleu_scores['version'] = ds_version
 

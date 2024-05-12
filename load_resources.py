@@ -1,12 +1,12 @@
 import boto3
 from boto3.exceptions import S3UploadFailedError
 from dotenv import load_dotenv
-import os , json
-from pprint import pprint
+import os , json, logging
 load_dotenv()
 from datetime import datetime
 
-
+logger = logging.getLogger(__name__)
+logger.basicConfig(level=logging.INFO)
 
 def get_datetime():
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -29,7 +29,7 @@ def download_files_from_folder(s3_client:boto3.Session,bucket_name:str,folder_na
         response =s3_client.list_objects_v2(Bucket=bucket_name, Prefix=folder_name)
 
         if not 'Content' in response.keys() : 
-                print(f"[{get_datetime()}] Folder {folder_name} not found in bucket {bucket_name}")
+                logger.info(f"[{get_datetime()}] Folder {folder_name} not found in bucket {bucket_name}")
 
         for obj in response.get('Contents', []):
                 key = obj['Key']
@@ -98,7 +98,7 @@ def upload_ressources(access_key:str,
                         
                         try : 
                                 s3_client.upload_file(local_path, bucket_name, remote_path)
-                                print(f"[{get_datetime()}] File {local_path} successfully uploaded to S3 ")
+                                logger.info(f"[{get_datetime()}] File {local_path} successfully uploaded to S3 ")
                         except S3UploadFailedError as e:
                                 raise e 
                 else : # folders
@@ -108,7 +108,7 @@ def upload_ressources(access_key:str,
                                         remote_file_path = os.path.join(remote_path,root,f).replace("\\","/")
                                         try : 
                                                 s3_client.upload_file(local_path_file, bucket_name, remote_file_path)
-                                                print(f"[{get_datetime()}] File {local_path_file} successfully uploaded to S3 ")
+                                                logger.info(f"[{get_datetime()}] File {local_path_file} successfully uploaded to S3 ")
                                         except S3UploadFailedError as e:
                                                 raise e   
 

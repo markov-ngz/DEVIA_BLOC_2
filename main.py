@@ -1,7 +1,9 @@
 from tune_model import tune_model
 from dotenv import load_dotenv 
 from argparse import ArgumentParser
-import json , os
+import json , os , logging 
+
+
 load_dotenv()
 
 # evaluate or train ? 

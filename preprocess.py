@@ -1,7 +1,12 @@
+import logging
 import pandas as pd
 from datasets import Dataset , DatasetDict
 from transformers import AutoTokenizer
 from transformers import DataCollatorForSeq2Seq , TFAutoModelForSeq2SeqLM
+
+
+logger = logging.getLogger(__name__)
+logger.basicConfig(level=logging.INFO)
 
 def dict_formatter(x,col_origin, col_target):
     return {"id":x['index'],"translation":{col_origin : x[col_origin], col_target : x[col_target]}}
@@ -71,7 +76,7 @@ def to_tf_dataset(hf_ds_tokenized:DatasetDict,tokenizer, model_checkpoint:str)->
     model=TFAutoModelForSeq2SeqLM.from_pretrained(model_checkpoint)
     data_collator=DataCollatorForSeq2Seq(tokenizer=tokenizer,model=model,return_tensors='tf')
 
-    print("Model and data collator loaded ")
+    logger.info("Model and data collator loaded ")
 
     dict_tf_ds = {}
     for key in hf_ds_tokenized : 
