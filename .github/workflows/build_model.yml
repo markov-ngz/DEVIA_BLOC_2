@@ -32,14 +32,13 @@ jobs:
     - name: Install dependencies
       run : |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -r requirementsv3.txt
     - name: Download model and tokenizer
       run : | 
         python load_resources.py
-        ls
     - name: Download model, tokenizer + Run pytest
       run: |
-        ls
+        python -m pytest -v -s 
 
     # - name: Upload pytest test result
     #   uses: actions/upload-artifact@v4

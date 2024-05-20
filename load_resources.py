@@ -130,7 +130,7 @@ if __name__ == '__main__' :
                 S3_MODEL = json.load(f)
         with open("s3_datasets.json")as f:
                 S3_DS = json.load(f)
-        DOWNLOAD_PATH = os.getenv("DOWNLOAD_PATH")
+        DOWNLOAD_PATH = ""
         S3_ACCESS_KEY = os.getenv("S3_ACCESS_KEY")
         S3_SECRET_KEY = os.getenv("S3_SECRET_KEY")
 
