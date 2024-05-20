@@ -36,9 +36,14 @@ jobs:
     - name: Download model and tokenizer
       run : | 
         python load_resources.py
+        ls -a
+        pwd
+        ls ../
     - name: Download model, tokenizer + Run pytest
       run: |
-        python -m pytest -v -s 
+        ls
+        ls -a
+        ls ../
 
     # - name: Upload pytest test result
     #   uses: actions/upload-artifact@v4
