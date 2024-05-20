@@ -38,4 +38,5 @@ Puis sur le conteneur de l'api exposant le modèle effectué un déploiement ble
 
 ## 3.Défauts
 - Sur un nouveau dataset : entrainement obligatoire.
-- Actuellement les scores ne sont pas mis à jours ( il faudrait pour voir effectuer un commit au sein du workflow tout en maintenant le gitignore ou alors toujours avec le principe de upload / download le fichier de scoring ?)
+- 12 minutes 35 secondes pour faire tourner l'entièreté des tests  ( Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz   1.80 GHz , 15.9 Go de RAM )
+

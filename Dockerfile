@@ -1,4 +1,6 @@
 FROM alpine:latest
 
-COPY ./model/ ./
-COPY ./tokenizer ./
+RUN mkdir resources
+
+COPY ./model ./resources/model
+COPY ./tokenizer ./resources/tokenizer

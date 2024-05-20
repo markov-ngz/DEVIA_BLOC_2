@@ -1,0 +1,12 @@
+transformers
+pytest
+tf_keras
+tensorflow
+pytorch
+sentencepiece
+sacrebleu
+python-dotenv
+pandas
+evaluate
+datasets
+boto3
