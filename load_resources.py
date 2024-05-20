@@ -144,4 +144,4 @@ if __name__ == '__main__' :
                                    S3_DS['datasets_folder']
                            ],
                            download_folder_path=DOWNLOAD_PATH, 
-                           os_windows=True)
+                           os_windows=False)
