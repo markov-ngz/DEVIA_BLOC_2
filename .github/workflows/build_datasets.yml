@@ -3,7 +3,7 @@ name : Test datasets
 on: 
   pull_request:
     branches:
-      - dataset
+      - main
     paths:
       - 's3_datasets.json'
 jobs:
