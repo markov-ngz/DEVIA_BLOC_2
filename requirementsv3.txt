@@ -2,7 +2,7 @@ transformers
 pytest
 tf_keras
 tensorflow
-pytorch
+torch
 sentencepiece
 sacrebleu
 python-dotenv
