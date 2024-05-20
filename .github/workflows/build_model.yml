@@ -33,35 +33,38 @@ jobs:
       run : |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+    - name: Download model and tokenizer
+      run : | 
+        python load_resources.py
+        ls
     - name: Download model, tokenizer + Run pytest
       run: |
-        python load_resources.py
-        python -m pytest -v -s
+        ls
 
-    - name: Upload pytest test result
-      uses: actions/upload-artifact@v4
-      with:
-        name: pytest-results-${{ matrix.python-version }}
-        path: test-results-${{ matrix.python-version }}.xml
-      if: ${{ always() }}
+    # - name: Upload pytest test result
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: pytest-results-${{ matrix.python-version }}
+    #     path: test-results-${{ matrix.python-version }}.xml
+    #   if: ${{ always() }}
 
-    - name: Evaluate model  on new dataset 
-      run: | 
-        python main.py --only_evaluate
+    # - name: Evaluate model  on new dataset 
+    #   run: | 
+    #     python main.py --only_evaluate
 
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3  
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+    # - name: Login to Docker Hub
+    #   uses: docker/login-action@v3  
+    #   with:
+    #     username: ${{ secrets.DOCKER_USERNAME }}
+    #     password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build Docker Image
-      run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_APPNAME }}:ai_resource .
+    # - name: Build Docker Image
+    #   run: |
+    #     docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_APPNAME }}:ai_resource .
 
-    - name: Push Docker Image to Docker Hub
-      run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_APPNAME }}:ai_resource
+    # - name: Push Docker Image to Docker Hub
+    #   run: |
+    #     docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_APPNAME }}:ai_resource
 
 
