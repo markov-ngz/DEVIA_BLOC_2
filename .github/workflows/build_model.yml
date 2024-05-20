@@ -36,7 +36,10 @@ jobs:
     - name: Download model and tokenizer
       run : | 
         python load_resources.py
+        pwd
         ls -a
+        ls model/
+        ls tokenizer/
     - name:  Run pytest
       run: |
         python -m pytest -v -s --junitxml=test-results.xml
