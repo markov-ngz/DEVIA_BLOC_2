@@ -7,7 +7,7 @@ on:
     paths:
       - 's3_model.json'
 jobs:
-  test: # job name
+  test:
     name: Run pytest
     runs-on: ubuntu-latest
     env:
@@ -28,46 +28,45 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version}}
+    
+    - name: Install dependencies
+      run : |
+        python -m pip install --upgrade pip
+        pip install -r requirementsv3.txt
+    - name: Download model and tokenizer
+      run : | 
+        python load_resources.py
+        pwd
+        ls -a
+        ls model/
+        ls tokenizer/
+    - name:  Run pytest
+      run: |
+        python -m pytest -v -s --junitxml=test-results.xml
+
+    - name: Upload pytest test result
+      uses: actions/upload-artifact@v4
+      with:
+        name: pytest-results-${{ matrix.python-version }}
+        path: test-results.xml
+      if: ${{ always() }}
+
+    - name: Evaluate model  on new dataset 
+      run: | 
+        python main.py --only_evaluate
 
     - name: Login to Docker Hub
       uses: docker/login-action@v3  
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-    
-    # - name: Install dependencies
-    #   run : |
-    #     python -m pip install --upgrade pip
-    #     pip install -r requirementsv3.txt
-    # - name: Download model and tokenizer
-    #   run : | 
-    #     python load_resources.py
-    #     pwd
-    #     ls -a
-    #     ls model/
-    #     ls tokenizer/
-    # - name:  Run pytest
-    #   run: |
-    #     python -m pytest -v -s --junitxml=test-results.xml
 
-    # - name: Upload pytest test result
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: pytest-results-${{ matrix.python-version }}
-    #     path: test-results.xml
-    #   if: ${{ always() }}
+    - name: Build Docker Image
+      run: |
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_APPNAME }}:ai_resource .
 
-    # - name: Evaluate model  on new dataset 
-    #   run: | 
-    #     python main.py --only_evaluate
-
-
-    # - name: Build Docker Image
-    #   run: |
-    #     docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_APPNAME }}:ai_resource .
-
-    # - name: Push Docker Image to Docker Hub
-    #   run: |
-    #     docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_APPNAME }}:ai_resource
+    - name: Push Docker Image to Docker Hub
+      run: |
+        docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_APPNAME }}:ai_resource
 
 
