@@ -155,10 +155,11 @@ def tune_model(csv_dict:dict,
             # save tokenizer
             tokenizer.save_pretrained(TOKENIZER_CHECKPOINT)
             
-            # upload_ressources(s3_credentials['access_key'],
-            #                   s3_credentials['secret_key'], 
-            #                   s3_credentials['bucket_name'],
-            #                   resources_paths )
+            upload_ressources(s3_credentials['access_key'],
+                            s3_credentials['secret_key'], 
+                            s3_credentials['bucket_name'],
+                            resources_paths )
+            
         elif bleu_score_test['score'] <= threshold['min'] or  bleu_score_test['score'] >= threshold['max'] : # model do not match teams requirements
             msg = f" Model test score  on bleu metric : {bleu_score_test['score']} is not matching the requirements. Bleu score must be between [{threshold['min']}:{threshold['max']}]"
             logger.error(msg)
@@ -181,10 +182,10 @@ def tune_model(csv_dict:dict,
         tokenizer.save_pretrained(TOKENIZER_CHECKPOINT)
         # Ecrire le dictionnaire dans le fichier
 
-        # upload_ressources(s3_credentials['access_key'],
-        #             s3_credentials['secret_key'], 
-        #             s3_credentials['bucket_name'],
-        #             resources_paths )
+        upload_ressources(s3_credentials['access_key'],
+                    s3_credentials['secret_key'], 
+                    s3_credentials['bucket_name'],
+                    resources_paths )
             
 
 
