@@ -3,7 +3,7 @@ name : Test model
 on: 
   pull_request:
     branches:
-      - model
+      - main
 jobs:
   test: # job name
     name: Run pytest
