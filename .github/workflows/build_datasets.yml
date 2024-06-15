@@ -3,9 +3,7 @@ name : Test datasets
 on: 
   pull_request:
     branches:
-      - dataset
-    paths:
-      - 's3_datasets.json'
+      - datasets
 jobs:
   test: # job name
     name: Run pytest
@@ -53,7 +51,6 @@ jobs:
     - name: Evaluate model  on new dataset 
       run: | 
         python main.py --only_evaluate
-      continue-on-error: true
 
     - name: Train model  on new dataset 
       if: ${{ failure() }} 

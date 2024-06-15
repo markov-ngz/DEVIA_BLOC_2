@@ -1,0 +1,9 @@
+services:
+  model:
+    container_name: model
+    image: markreduce/devia_titre:model
+    volumes:
+      - blue-vol:/resources/
+  volumes:
+    blue-vol:
+      external: true

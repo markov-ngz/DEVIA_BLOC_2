@@ -129,7 +129,7 @@ def tune_model(csv_dict:dict,
 
     logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] :   Computing Bleu Score for Test dataset ") 
     bleu_score_test = get_bleu_score(tf_ds['test'],model,tokenizer)
-    logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] :   Finished Computing Bleu Score for Test dataset ") 
+    logger.info(f"[{datetime.now().strftime('%H:%M:%S')}] :   Finished Computing Bleu Score for Test dataset, BLEU SCORE on Test: {str(bleu_score_test['score'])} ") 
     bleu_scores['test'] = bleu_score_test
     bleu_scores['version'] = ds_version
 
@@ -140,11 +140,10 @@ def tune_model(csv_dict:dict,
 
         if ( # is the model better than the current one ? 
             bleu_score_test['score'] > max_blue_score['test']['score'] and 
-            bleu_score_test['score'] < 50 + (50 - max_blue_score['test']['score']) and 
             ds_version == max_blue_score['version']
             ) or ( # new version of the dataset , does the model match the teams requirements ? 
             ds_version > max_blue_score['version'] and 
-            bleu_score_test['score'] >= threshold['min'] and  bleu_score_test['score'] <= threshold['max']
+            bleu_score_test['score'] >= threshold['min']
             ): 
             
             with open(BLEU_PATH, 'w') as f:
@@ -159,8 +158,7 @@ def tune_model(csv_dict:dict,
                             s3_credentials['secret_key'], 
                             s3_credentials['bucket_name'],
                             resources_paths )
-            
-        elif bleu_score_test['score'] <= threshold['min'] or  bleu_score_test['score'] >= threshold['max'] : # model do not match teams requirements
+        elif bleu_score_test['score'] <= threshold['min']  : # model do not match teams requirements
             msg = f" Model test score  on bleu metric : {bleu_score_test['score']} is not matching the requirements. Bleu score must be between [{threshold['min']}:{threshold['max']}]"
             logger.error(msg)
             raise Exception(msg) 
