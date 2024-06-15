@@ -3,9 +3,10 @@ name : Test model
 on: 
   pull_request:
     branches:
-      - model
+      - main
     paths:
       - 's3_model.json'
+
 jobs:
   test:
     name: Run pytest
