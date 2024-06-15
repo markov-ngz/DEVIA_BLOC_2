@@ -3,7 +3,7 @@ name : Test model
 on: 
   pull_request:
     branches:
-      - main
+      - model
     paths:
       - 's3_model.json'
 jobs:

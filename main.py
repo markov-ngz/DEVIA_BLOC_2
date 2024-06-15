@@ -17,7 +17,7 @@ parser.add_argument("--epochs",default=0,required=False,type=int,help="Choose th
 
 only_eval_model = parser.parse_args().only_evaluate
 if only_eval_model != True :
-    only_eval_model = False
+      only_eval_model = False
 epochs = parser.parse_args().epochs
 
 
@@ -41,29 +41,29 @@ S3_ACCESS_KEY = os.getenv("S3_ACCESS_KEY")
 S3_SECRET_KEY = os.getenv("S3_SECRET_KEY")
 DOWNLOAD_PATH = os.getenv("DOWNLOAD_PATH")
 with open("s3_model.json")as f:
-        S3_MODEL = json.load(f)
+      S3_MODEL = json.load(f)
 with open("s3_datasets.json")as f:
-        S3_DS = json.load(f)
+      S3_DS = json.load(f)
 
 bleu_path = os.path.join(S3_MODEL['scoring']['folder'],S3_MODEL['scoring']['file_name'])
 model_path = os.path.join(DOWNLOAD_PATH, S3_MODEL["model"])
 tokenizer_path =  os.path.join(DOWNLOAD_PATH, S3_MODEL["tokenizer"])
 
 for key in S3_DS['datasets'].keys() : 
-    S3_DS['datasets'][key] =  os.path.join(DOWNLOAD_PATH, S3_DS['datasets'][key])
+      S3_DS['datasets'][key] =  os.path.join(DOWNLOAD_PATH, S3_DS['datasets'][key])
 
 
 tune_model(
-        S3_DS['datasets'],
-        S3_DS["quotechar"],
-        S3_DS['cols']['origin'],
-        S3_DS['cols']['target'],
-        model_path,
-        tokenizer_path,
-        bleu_path,
-        S3_DS['version'],
-        {"min":S3_DS['threshold']['min'],"max":S3_DS['threshold']['max']},
-        {"access_key":S3_ACCESS_KEY,"secret_key":S3_SECRET_KEY,"bucket_name":S3_BUCKET},
-        only_eval_model=only_eval_model,
-        EPOCHS=epochs
+      S3_DS['datasets'],
+      S3_DS["quotechar"],
+      S3_DS['cols']['origin'],
+      S3_DS['cols']['target'],
+      model_path,
+      tokenizer_path,
+      bleu_path,
+      S3_DS['version'],
+      {"min":S3_DS['threshold']['min']},
+      {"access_key":S3_ACCESS_KEY,"secret_key":S3_SECRET_KEY,"bucket_name":S3_BUCKET},
+      only_eval_model=only_eval_model,
+      EPOCHS=epochs
 )
