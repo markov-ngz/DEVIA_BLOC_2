@@ -59,7 +59,7 @@ def tokenize_hf_ds(hf_ds:DatasetDict,tokenizer_path:str,col_origin:str, col_targ
     """
     Return (tokenizer: MarianTokenizer, dataset_tokenized:DatasetDict)
     """
-    tokenizer=AutoTokenizer.from_pretrained(tokenizer_path)
+    tokenizer=AutoTokenizer.from_pretrained(tokenizer_path,local_files_only=True)
 
     def tokenizer_func(example):
 
@@ -77,7 +77,7 @@ def to_tf_dataset(hf_ds_tokenized:DatasetDict,tokenizer, model_checkpoint:str)->
     From a DatasetDict already tokenized , 
     Return ( model loaded from the given checkpoint and , _dict{key:_PrefetchDataset as a tensorflow usable dataset})
     """
-    model=TFAutoModelForSeq2SeqLM.from_pretrained(model_checkpoint)
+    model=TFAutoModelForSeq2SeqLM.from_pretrained(model_checkpoint,local_files_only=True)
     data_collator=DataCollatorForSeq2Seq(tokenizer=tokenizer,model=model,return_tensors='tf')
 
     logger.info("Model and data collator loaded ")

@@ -16,8 +16,8 @@ load_dotenv()
 
 dataset_ok = json.load(open("tests/test_datasets/dataset_ok.json"))
 
-TEST_MODEL_CHECKPOINT = "model"
-TEST_TOKENIZER_CHECKPOINT = "tokenizer"
+TEST_MODEL_CHECKPOINT = "model/"
+TEST_TOKENIZER_CHECKPOINT = "tokenizer/"
 TEST_CSV_PATH = f"tests/test_datasets/{dataset_ok['name']}.csv"
 TEST_QUOTECHAR = dataset_ok['quotechar']
 TEST_COL_SOURCE = dataset_ok['col_origin']
@@ -54,8 +54,8 @@ def model_and_tokenizer_checkpoint():
 @pytest.fixture(scope="session")  # Download model and tokenizer once for all tests
 def model_and_tokenizer():
 
-    tokenizer = AutoTokenizer.from_pretrained(TEST_TOKENIZER_CHECKPOINT)
-    model = TFAutoModelForSeq2SeqLM.from_pretrained(TEST_MODEL_CHECKPOINT)
+    tokenizer = AutoTokenizer.from_pretrained(TEST_TOKENIZER_CHECKPOINT,local_files_only=True)
+    model = TFAutoModelForSeq2SeqLM.from_pretrained(TEST_MODEL_CHECKPOINT,local_files_only=True)
     return tokenizer, model
 
 

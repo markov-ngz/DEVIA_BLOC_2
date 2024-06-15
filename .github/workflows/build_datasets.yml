@@ -3,9 +3,9 @@ name : Test datasets
 on: 
   pull_request:
     branches:
-      - dataset
-    paths:
-      - 's3_datasets.json'
+      - datasets
+    # paths:
+    #  - 's3_datasets.json'
 jobs:
   test: # job name
     name: Run pytest

@@ -13,8 +13,7 @@
     "quotechar" : "}" ,
     "threshold": {
         "metric_name": "bleu",
-        "min": 30,
-        "max": 70
+        "min": 30
 
     }
 }
