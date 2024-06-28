@@ -4,6 +4,6 @@ services:
     image: markreduce/devia_titre:model
     volumes:
       - blue-vol:/resources/
-  volumes:
-    blue-vol:
-      external: true
+volumes:
+  blue-vol:
+    external: true
