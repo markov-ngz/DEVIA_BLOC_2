@@ -29,7 +29,7 @@ jobs:
       - name: Get public ip of the runner 
         run: curl -s ifconfig.me
       - name: Sleep
-        run: sleep 30
+        run: sleep 42
         
   destroy_infra:
     runs-on: ubuntu-latest
