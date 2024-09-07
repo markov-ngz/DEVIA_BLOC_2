@@ -19,5 +19,5 @@ jobs:
         
   destroy_infra:
     needs: evaluate_model
-    if:  needs.*.result == "success" || needs.*.result == "failure" 
+    if:   needs.evaluate_model.result == 'success' || needs.evaluate_model.result == 'failure'
     uses: markov-ngz/private-auto-github-runner/.github/workflows/destroy.yml@main
