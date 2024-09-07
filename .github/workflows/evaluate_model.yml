@@ -10,7 +10,7 @@ jobs:
     with:
       repository: ${{ github.repository }}
     
-  integration_tests:
+  evaluate_model:
     needs: setup_infra
     runs-on: self-hosted
     steps:
@@ -18,6 +18,6 @@ jobs:
         run: curl -s ifconfig.me
         
   destroy_infra:
-    needs: integration_tests
-    if: ${{ always() }}
+    needs: evaluate_model
+    if: ${{ needs.*.success == "success" || needs.*.success == "failure" }}
     uses: markov-ngz/private-auto-github-runner/.github/workflows/destroy.yml@main
