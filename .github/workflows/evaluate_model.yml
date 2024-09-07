@@ -6,20 +6,43 @@ on:
     
 jobs:
   setup_infra: 
-    permissions: write-all
-    uses: markov-ngz/private-auto-github-runner/.github/workflows/register.yml@main
-    with:
-      repository: ${{ github.repository }}
-    
+    runs-on: ubuntu-latest
+    steps: 
+      - name: trigger workflow
+        run: |
+          curl -L \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer $GH_TOKEN" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/repos/$GH_REPO/actions/workflows/register.yml/dispatches \
+          -d '{"ref":"main","inputs":{"repository":"$repository"}}'
+        env: 
+          GH_TOKEN: ${{secrets.GH_TOKEN }}
+          GH_REPO: markov-ngz/private-auto-github-runner
+          repository: ${{ github.repository }}
+          
   evaluate_model:
     needs: setup_infra
     runs-on: self-hosted
     steps:
       - name: Get public ip of the runner 
         run: curl -s ifconfig.me
+      - name: Sleep
+        run: sleep 30
         
   destroy_infra:
-    permissions: write-all
-    needs: evaluate_model
-    if:   needs.evaluate_model.result == 'success' || needs.evaluate_model.result == 'failure'
-    uses: markov-ngz/private-auto-github-runner/.github/workflows/destroy.yml@main
+    runs-on: ubuntu-latest
+    steps: 
+      - name: trigger workflow
+        run: |
+          curl -L \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer $GH_TOKEN" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/repos/$GH_REPO/actions/workflows/destroy.yml/dispatches \
+          -d '{"ref":"main"}}'
+        env: 
+          GH_TOKEN: ${{secrets.GH_TOKEN }}
+          GH_REPO: markov-ngz/private-auto-github-runner
