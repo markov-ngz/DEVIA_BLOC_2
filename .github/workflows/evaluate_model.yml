@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
     
 jobs:
-  setup_infra: # par exemple run test 
+  setup_infra: 
     uses: markov-ngz/private-auto-github-runner/.github/workflows/register.yml@main
     with:
       repository: ${{ github.repository }}
