@@ -6,9 +6,7 @@ on:
     
 jobs:
   setup_infra: 
-    permissions:
-      id-token: write
-      contents: read 
+    permissions: write-all
     uses: markov-ngz/private-auto-github-runner/.github/workflows/register.yml@main
     with:
       repository: ${{ github.repository }}
@@ -21,9 +19,7 @@ jobs:
         run: curl -s ifconfig.me
         
   destroy_infra:
-    permissions:
-      id-token: write
-      contents: read 
+    permissions: write-all
     needs: evaluate_model
     if:   needs.evaluate_model.result == 'success' || needs.evaluate_model.result == 'failure'
     uses: markov-ngz/private-auto-github-runner/.github/workflows/destroy.yml@main
