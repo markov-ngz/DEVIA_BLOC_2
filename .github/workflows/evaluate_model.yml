@@ -5,46 +5,54 @@ on:
     branches: [ "main" ]
     
 jobs:
-  setup_infra: 
-    runs-on: ubuntu-latest
-    steps: 
-      - name: trigger workflow
-        run: |
-          curl -L \
-          -X POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer $GH_TOKEN" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          https://api.github.com/repos/$GH_REPO/actions/workflows/register.yml/dispatches \
-          -d '{"ref":"main","inputs":{"repository":"$repository"}}'
-        env: 
-          GH_TOKEN: ${{secrets.GH_TOKEN }}
-          GH_REPO: markov-ngz/private-auto-github-runner
-          repository: ${{ github.repository }}
+  # setup_infra: 
+  #   runs-on: ubuntu-latest
+  #   steps: 
+  #     - name: trigger workflow
+  #       run: |
+  #         curl -L \
+  #         -X POST \
+  #         -H "Accept: application/vnd.github+json" \
+  #         -H "Authorization: Bearer $GH_TOKEN" \
+  #         -H "X-GitHub-Api-Version: 2022-11-28" \
+  #         https://api.github.com/repos/$GH_REPO/actions/workflows/register.yml/dispatches \
+  #         -d '{"ref":"main","inputs":{"repository":"$repository"}}'
+  #       env: 
+  #         GH_TOKEN: ${{secrets.GH_TOKEN }}
+  #         GH_REPO: markov-ngz/private-auto-github-runner
+  #         repository: ${{ github.repository }}
           
   evaluate_model:
-    needs: setup_infra
-    runs-on: self-hosted
-    steps:
-      - name: Get public ip of the runner 
-        run: curl -s ifconfig.me
-      - name: Sleep
-        run: sleep 42
-        
-  destroy_infra:
+    # needs: setup_infra
+    # runs-on: self-hosted
     runs-on: ubuntu-latest
-    needs: evaluate_model
-    if:   needs.evaluate_model.result == 'success' || needs.evaluate_model.result == 'failure'
-    steps: 
-      - name: trigger workflow
-        run: |
-          curl -L \
-          -X POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer $GH_TOKEN" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          https://api.github.com/repos/$GH_REPO/actions/workflows/destroy.yml/dispatches \
-          -d '{"ref":"main"}}'
+    steps:
+      - name: Troubleshoot repository
+        run: echo '$T1 , $T2, $T3, $T4'
+        env: 
+          T1: ${{ github.event.repository}}
+          T2:  ${{ github.repository}}
+          T3: ${{ github.events.repository}}
+          T4: ${{ github.events.repository.name }}
+      # - name: Get public ip of the runner 
+      #   run: curl -s ifconfig.me
+      # - name: Sleep
+      #   run: sleep 42
+        
+  # destroy_infra:
+  #   runs-on: ubuntu-latest
+  #   needs: evaluate_model
+  #   if:   needs.evaluate_model.result == 'success' || needs.evaluate_model.result == 'failure'
+  #   steps: 
+  #     - name: trigger workflow
+  #       run: |
+  #         curl -L \
+  #         -X POST \
+  #         -H "Accept: application/vnd.github+json" \
+  #         -H "Authorization: Bearer $GH_TOKEN" \
+  #         -H "X-GitHub-Api-Version: 2022-11-28" \
+  #         https://api.github.com/repos/$GH_REPO/actions/workflows/destroy.yml/dispatches \
+  #         -d '{"ref":"main"}'
         env: 
           GH_TOKEN: ${{secrets.GH_TOKEN }}
           GH_REPO: markov-ngz/private-auto-github-runner
