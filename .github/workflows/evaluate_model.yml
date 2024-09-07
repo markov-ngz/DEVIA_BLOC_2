@@ -1,0 +1,23 @@
+name: Validate model 
+
+on:
+  push:
+    branches: [ "main" ]
+    
+jobs:
+  setup_infra: # par exemple run test 
+    uses: markov-ngz/private-auto-github-runner/.github/workflows/register.yml@main
+    with:
+      repository: ${{ github.repository }}
+    
+  integration_tests:
+    needs: setup_infra
+    runs-on: self-hosted
+    steps:
+      - name: Get public ip of the runner 
+        run: curl -s ifconfig.me
+        
+  destroy_infra:
+    needs: integration_tests
+    if: ${{ always() }}
+    uses: markov-ngz/private-auto-github-runner/.github/workflows/destroy.yml@main
