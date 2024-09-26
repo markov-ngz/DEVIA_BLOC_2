@@ -2,7 +2,7 @@ name: Validate model
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "mainn" ]
     
 jobs:
   setup_infra: 
