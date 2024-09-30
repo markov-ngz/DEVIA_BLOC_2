@@ -2,10 +2,10 @@ name : Train model
 
 on:
   workflow_dispatch: # input epoch number
+    inputs:
       epochs:
         description: 'number of epochs to train the model on'
         required: true
-        default: '1'
         type: string
 jobs:
   build:
