@@ -1,9 +1,7 @@
 name : Test model
 
 on: 
-  pull_request:
-    branches:
-      - model
+  workflow_dispatch:
 
 jobs:
   test:
