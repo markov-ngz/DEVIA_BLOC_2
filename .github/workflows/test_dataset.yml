@@ -47,7 +47,3 @@ jobs:
         name: pytest-results-${{ matrix.python-version }}
         path: test-results-${{ matrix.python-version }}.xml
       if: ${{ always() }}
-
-    - name: Evaluate model  on new dataset # score is uploaded on S3 
-      run: | 
-        python main.py --only_evaluate
