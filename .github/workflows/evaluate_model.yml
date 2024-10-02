@@ -1,9 +1,8 @@
 name: Evaluate model 
 
 on:
-  push:
-    branches: [ "model" ]
-    
+  workflow_dispatch:
+  
 jobs:
   setup_infra: # register a new github ephemeral github runner (evaluation requires more powerful machine than the free ones) 
     runs-on: ubuntu-latest
