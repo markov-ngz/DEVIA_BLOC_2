@@ -1,0 +1,13 @@
+name: Build model
+
+on:  
+  pull_request:
+    branches:
+      - model
+
+jobs:
+  test:
+    uses: ./.github/workflows/test_model.yml
+  evaluate:
+    needs: test
+    uses: ./.github/workflows/evaluate_model.yml
