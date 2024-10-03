@@ -7,20 +7,11 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Test the model
-        uses: markov-ngz/dispatch-action@v1
-        with:
-          workflow_path: markov-ngz/DEVIA_BLOC_2/actions/workflows/test_model.yml
-          token: ${{secrets.GH_TOKEN}}
+    uses: markov-ngz/DEVIA_BLOC_2/.github/workflows/test_model.yml@main
+    secrets: inherit
+    
           
   evaluate: # for debugging purpose tests and evluate are divided into 2 jobs in order to run the second one without running the first
     needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Evaluate the model 
-        uses: markov-ngz/dispatch-action@v1
-        with:
-          workflow_path: markov-ngz/DEVIA_BLOC_2/actions/workflows/evaluate_model.yml
-          token: ${{secrets.GH_TOKEN}}
+    uses: markov-ngz/DEVIA_BLOC_2/.github/workflows/evaluate_model.yml@main
+    secrets: inherit
