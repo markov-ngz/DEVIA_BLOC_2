@@ -18,6 +18,9 @@ jobs:
   evaluate_test_model:
     needs: setup_infra
     runs-on: self-hosted
+    strategy:
+      matrix:
+        python-version: ["3.11.8"]
     steps: 
       - name: Checkout repository
         uses: actions/checkout@v4
