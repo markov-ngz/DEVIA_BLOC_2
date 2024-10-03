@@ -4,7 +4,7 @@
     "datasets": {
         "train":"datasets/train.csv",
         "valid":"datasets/valid.csv",
-        "test":"datasets/test.csv"
+        "test":"datasets/test_2.csv"
     },
     "cols": {
         "origin": "fr",
