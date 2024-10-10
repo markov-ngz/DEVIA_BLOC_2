@@ -4,19 +4,19 @@ on:
   workflow_call:
   
 jobs:
-  # setup_infra: # register a new github ephemeral github runner (evaluation requires more powerful machine than the free ones) 
-  #   runs-on: ubuntu-latest
-  #   steps: 
-  #     - name: Add self hosted runner
-  #       uses: markov-ngz/dispatch-action@v.1.0.0
-  #       with:
-  #         token: ${{secrets.GH_TOKEN}}
-  #         workflow_file: register.yml
-  #         repository: markov-ngz/private-auto-github-runner
-  #         variables: 'repository=markov-ngz/DEVIA_BLOC_2'
+  setup_infra: # register a new github ephemeral github runner (evaluation requires more powerful machine than the free ones) 
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Add self hosted runner
+        uses: markov-ngz/dispatch-action@v.1.0.0
+        with:
+          token: ${{secrets.GH_TOKEN}}
+          workflow_file: register.yml
+          repository: markov-ngz/private-auto-github-runner
+          variables: 'repository=markov-ngz/DEVIA_BLOC_2'
           
   evaluate_test_model:
-    # needs: setup_infra
+    needs: setup_infra
     runs-on: self-hosted
     strategy:
       matrix:
@@ -55,7 +55,7 @@ jobs:
   destroy_infra:
     runs-on: ubuntu-latest
     needs: evaluate_test_model
-    if:   needs.evaluate_model.result == 'success' || needs.evaluate_model.result == 'failure'
+    if:  ${{ always() }}
     steps: 
       - name: Destroy self hosted runner
         uses: markov-ngz/dispatch-action@v.1.0.0
