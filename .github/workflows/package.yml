@@ -4,23 +4,10 @@ on:
   pull_request:
     branches:
       - main 
+      - '!datasets'
 jobs:
-  filter_ref:
-    name: Filter reference head
-    runs-on: ubuntu-latest
-    outputs:
-      condition: ${{ steps.condition.outputs.condition }}
-    steps:
-      - id: condition
-        run: |
-          if [[ ${{ github.head_ref }} != *"datasets"* ]]; then
-            echo "condition=true" >> $GITHUB_OUTPUT
-          else
-            echo "condition=false" >> $GITHUB_OUTPUT  
-          fi
 
   package: 
-    needs: filter_ref
     if: needs.filter_ref.outputs.condition == true
     name: Package to docker
     runs-on: ubuntu-latest
