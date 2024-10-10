@@ -1,4 +1,4 @@
-name: Evaluate model 
+name: Evaluate model # example
 
 on:
   workflow_call:
@@ -21,11 +21,13 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.11.8"]
+
     env:
       S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
       S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
       DOWNLOAD_PATH: ${{ secrets.DOWNLOAD_PATH }}
       S3_BUCKET: ${{ secrets.S3_BUCKET }}
+
     steps: 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -37,19 +39,19 @@ jobs:
       
       - name: Install dependencies
         run : |
-          python -m pip install --upgrade pip
+          python3 -m pip install --upgrade pip
           pip install -r requirements.txt
           
       - name: Download model and tokenizer
         run : | 
-          python load_resources.py
+          python3 load_resources.py
           pwd
           ls -a
           ls model/
           ls tokenizer/
       - name: Evaluate model  # scores uploaded on S3 
         run: | 
-          python main.py --only_evaluate
+          python3 main.py --only_evaluate
 
           
   destroy_infra:
