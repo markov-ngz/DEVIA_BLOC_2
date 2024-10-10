@@ -21,6 +21,11 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.11.8"]
+    env:
+      S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+      S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+      DOWNLOAD_PATH: ${{ secrets.DOWNLOAD_PATH }}
+      S3_BUCKET: ${{ secrets.S3_BUCKET }}
     steps: 
       - name: Checkout repository
         uses: actions/checkout@v4
