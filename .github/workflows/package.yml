@@ -23,7 +23,7 @@ jobs:
 
   package: 
     needs: filter_ref
-    if: needs.filter_ref.outputs.condition == true
+    if: ${{needs.filter_ref.outputs.condition == true }}
     name: Package to docker
     runs-on: ubuntu-latest
     steps:
