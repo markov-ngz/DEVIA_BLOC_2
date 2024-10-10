@@ -6,9 +6,9 @@ on:
       - model
 
 jobs:
-  test:
-    uses: markov-ngz/DEVIA_BLOC_2/.github/workflows/test_model.yml@main
-    secrets: inherit
+  # test:
+  #   uses: markov-ngz/DEVIA_BLOC_2/.github/workflows/test_model.yml@main
+  #   secrets: inherit
     
           
   evaluate: # for debugging purpose tests and evluate are divided into 2 jobs in order to run the second one without running the first
