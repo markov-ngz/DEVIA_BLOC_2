@@ -1,3 +1,4 @@
+"""Evaluate or train the model"""
 from transformers import create_optimizer
 import os 
 from dotenv import load_dotenv
@@ -138,7 +139,7 @@ def tune_model(csv_dict:dict,
         with open(BLEU_PATH, 'r') as f : 
             max_blue_score = json.load(f)
 
-        if ( # is the model better than the current one ? 
+        if ( # is the model better than the current one on the same version ? 
             bleu_score_test['score'] > max_blue_score['test']['score'] and 
             ds_version == max_blue_score['version']
             ) or ( # new version of the dataset , does the model match the teams requirements ? 
