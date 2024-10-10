@@ -28,12 +28,12 @@ jobs:
     
     - name: Install dependencies
       run : |
-        python -m pip install --upgrade pip
+        python3 -m pip install --upgrade pip
         pip install -r requirements.txt
         
     - name: Download model and tokenizer
       run : | 
-        python load_resources.py
+        python3 load_resources.py
         pwd
         ls -a
         ls model/
