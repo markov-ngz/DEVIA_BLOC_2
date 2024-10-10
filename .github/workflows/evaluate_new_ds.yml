@@ -1,0 +1,27 @@
+name: Evaluate on new dataset
+
+on: 
+  pull_request:
+    branches:
+      - main 
+
+jobs:
+  filter_ref:
+    name: Filter reference head
+    runs-on: ubuntu-latest
+    outputs:
+      condition: ${{ steps.condition.outputs.condition }}
+    steps:
+      - id: condition
+        run: |
+          if [[ ${{ github.head_ref }} == *"datasets"* ]]; then
+            echo "condition=true" >> $GITHUB_OUTPUT
+          else
+            echo "condition=false" >> $GITHUB_OUTPUT  
+          fi
+
+  evaluate: # for debugging purpose tests and evluate are divided into 2 jobs in order to run the second one without running the first
+    if: needs.filter_ref.outputs.condition == true
+    needs: filter_ref
+    uses: markov-ngz/DEVIA_BLOC_2/.github/workflows/evaluate_model.yml@main
+    secrets: inherit
