@@ -13,9 +13,11 @@ jobs:
     steps:
       - id: condition
         run: |
-          if [[ ${{ github.head_ref }} != *"datasets"* ]]; then
+          if [[ ${{ github.head_ref }} == *"model"* ]]; then
+            echo true
             echo "condition=true" >> $GITHUB_OUTPUT
           else
+            echo false
             echo "condition=false" >> $GITHUB_OUTPUT  
           fi
 
