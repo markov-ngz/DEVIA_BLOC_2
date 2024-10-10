@@ -1,4 +1,4 @@
-name: Evaluate model 
+name: Evaluate model # example
 
 on:
   workflow_call:
