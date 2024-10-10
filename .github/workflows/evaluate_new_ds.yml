@@ -4,10 +4,10 @@ on:
   pull_request:
     branches:
       - main 
-      - '!model'
 
 jobs:
 
   evaluate: # for debugging purpose tests and evluate are divided into 2 jobs in order to run the second one without running the first
+    if: ${{ github.head_ref == 'datasets' }}
     uses: markov-ngz/DEVIA_BLOC_2/.github/workflows/evaluate_model.yml@main
     secrets: inherit
